@@ -117,7 +117,8 @@ const Techonologies = ({ users }: ITechonologiesProps) => {
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
 
 
-                <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {/* Tech Cards - mobile এ 1 column, লিস্টে সবার আগে */}
+                <div className="order-1 lg:order-none lg:col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
                     {data.map((tech) => (
 
@@ -181,7 +182,8 @@ const Techonologies = ({ users }: ITechonologiesProps) => {
                 </div>
 
 
-                <div className="border border-gray-200 rounded-xl p-4 bg-white shadow-sm h-fit">
+                {/* Your Stack - mobile এ সবার শেষে, lg এ ডানপাশে sidebar */}
+                <div className="order-2 lg:order-none border border-gray-200 rounded-xl p-4 bg-white shadow-sm h-fit lg:sticky lg:top-5">
 
                     <h1 className="text-sm font-bold">
                         Your Stack
@@ -214,12 +216,12 @@ const Techonologies = ({ users }: ITechonologiesProps) => {
                                     className="border border-gray-200 rounded-lg px-3 py-2 flex items-center justify-between"
                                 >
 
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-2 min-w-0">
 
                                         {getIcon(tech.icon)}
 
-                                        <div>
-                                            <h2 className="text-xs font-semibold">
+                                        <div className="min-w-0">
+                                            <h2 className="text-xs font-semibold truncate">
                                                 {tech.name}
                                             </h2>
 
@@ -232,7 +234,7 @@ const Techonologies = ({ users }: ITechonologiesProps) => {
 
                                     <button
                                         onClick={() => removeFromStack(tech.id)}
-                                        className="text-gray-400 hover:text-red-500 text-xl leading-none"
+                                        className="text-gray-400 hover:text-red-500 text-xl leading-none ml-2"
                                     >
                                         ×
                                     </button>
