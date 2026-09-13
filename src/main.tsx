@@ -12,7 +12,7 @@ import type { ITechnology } from './types/techonology.ts'
 
 
 const techsFetch=async ():Promise<ITechnology[]> => {
-  const response = await fetch('techonology.json');
+  const response = await fetch('/techonology.json');
   const data = await response.json();
   return data;
 }
