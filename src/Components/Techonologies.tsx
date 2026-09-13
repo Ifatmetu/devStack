@@ -1,4 +1,5 @@
 import { use, useState } from "react";
+import { toast } from "react-toastify";
 import type { ITechnology } from "../types/techonology.ts";
 
 import {
@@ -85,14 +86,25 @@ const Techonologies = ({ users }: ITechonologiesProps) => {
         }
 
         setStack([...stack, tech]);
+        toast.success(`${tech.name} added to your stack`);
     };
 
     const removeFromStack = (id: string) => {
+
+        const removed = stack.find((item) => item.id === id);
 
         setStack(
             stack.filter((item) => item.id !== id)
         );
 
+        if (removed) {
+            toast.info(`${removed.name} removed from stack`);
+        }
+    };
+
+    const removeAllFromStack = () => {
+        setStack([]);
+        toast.info("Stack cleared");
     };
 
 
@@ -117,72 +129,89 @@ const Techonologies = ({ users }: ITechonologiesProps) => {
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
 
 
-                {/* Tech Cards - mobile এ 1 column, লিস্টে সবার আগে */}
                 <div className="order-1 lg:order-none lg:col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
-                    {data.map((tech) => (
+                    {data.map((tech) => {
 
-                        <div
-                            key={tech.id}
-                            className="border border-gray-200 rounded-xl p-4 bg-white shadow-sm"
-                        >
-                            <div className="flex justify-between items-center">
+                        const isAdded = stack.some(
+                            (item) => item.id === tech.id
+                        );
 
-                                {getIcon(tech.icon)}
+                        return (
 
-                                <span className="bg-blue-50 text-blue-500 text-[10px] px-3 py-1 rounded-full">
-                                    {tech.badge}
-                                </span>
+                            <div
+                                key={tech.id}
+                                className={`border rounded-xl p-4 bg-white shadow-sm transition-colors ${isAdded ? "border-pink-500" : "border-gray-200"
+                                    }`}
+                            >
+                                <div className="flex justify-between items-center">
 
-                            </div>
+                                    {getIcon(tech.icon)}
 
-
-                            <h1 className="text-base font-bold mt-4">
-                                {tech.name}
-                            </h1>
-                            <p className="text-[11px] text-gray-500 leading-4 mt-2">
-                                {tech.description}
-                            </p>
-
-
-                            <div className="flex items-center justify-between border-t border-gray-100 mt-4 pt-2">
-
-                                <span className="bg-gray-100 text-gray-500 text-[9px] px-2 py-1 rounded">
-                                    {tech.category}
-                                </span>
-
-                                <span className="text-gray-500 text-[9px]">
-                                    {tech.difficulty}
-                                </span>
-
-                                <span className="flex items-center gap-1 text-[9px]">
-
-                                    <span className="text-yellow-500">
-                                        ★
+                                    <span className="bg-blue-50 text-blue-500 text-[10px] px-3 py-1 rounded-full">
+                                        {tech.badge}
                                     </span>
 
-                                    {tech.rating}
+                                </div>
 
-                                </span>
+
+                                <h1 className="text-base font-bold mt-4">
+                                    {tech.name}
+                                </h1>
+                                <p className="text-[11px] text-gray-500 leading-4 mt-2">
+                                    {tech.description}
+                                </p>
+
+
+                                <div className="flex items-center justify-between border-t border-gray-100 mt-4 pt-2">
+
+                                    <span className="bg-gray-100 text-gray-500 text-[9px] px-2 py-1 rounded">
+                                        {tech.category}
+                                    </span>
+
+                                    <span className="text-gray-500 text-[9px]">
+                                        {tech.difficulty}
+                                    </span>
+
+                                    <span className="flex items-center gap-1 text-[9px]">
+
+                                        <span className="text-yellow-500">
+                                            ★
+                                        </span>
+
+                                        {tech.rating}
+
+                                    </span>
+
+                                </div>
+
+
+                                <button
+                                    onClick={() => addToStack(tech)}
+                                    disabled={isAdded}
+                                    className={`w-full flex items-center justify-center gap-1 text-[10px] py-2 rounded-md mt-3 transition-colors ${isAdded
+                                            ? "bg-pink-50 text-pink-600 border border-pink-500 cursor-not-allowed"
+                                            : "bg-[#080D1A] hover:bg-gray-800 text-white"
+                                        }`}
+                                >
+                                    {isAdded ? (
+                                        <>
+                                            <span>✓</span>
+                                            <span>Added to Stack</span>
+                                        </>
+                                    ) : (
+                                        "Add to Stack"
+                                    )}
+                                </button>
 
                             </div>
 
+                        );
 
-                            <button
-                                onClick={() => addToStack(tech)}
-                                className="w-full bg-[#080D1A] hover:bg-gray-800 text-white text-[10px] py-2 rounded-md mt-3"
-                            >
-                                Add to Stack
-                            </button>
-
-                        </div>
-
-                    ))}
+                    })}
 
                 </div>
 
-
-                {/* Your Stack - mobile এ সবার শেষে, lg এ ডানপাশে sidebar */}
                 <div className="order-2 lg:order-none border border-gray-200 rounded-xl p-4 bg-white shadow-sm h-fit lg:sticky lg:top-5">
 
                     <h1 className="text-sm font-bold">
@@ -207,43 +236,52 @@ const Techonologies = ({ users }: ITechonologiesProps) => {
 
                     ) : (
 
-                        <div className="mt-4 space-y-2">
+                        <>
+                            <div className="mt-4 space-y-2">
 
-                            {stack.map((tech) => (
+                                {stack.map((tech) => (
 
-                                <div
-                                    key={tech.id}
-                                    className="border border-gray-200 rounded-lg px-3 py-2 flex items-center justify-between"
-                                >
+                                    <div
+                                        key={tech.id}
+                                        className="border border-gray-200 rounded-lg px-3 py-2 flex items-center justify-between"
+                                    >
 
-                                    <div className="flex items-center gap-2 min-w-0">
+                                        <div className="flex items-center gap-2 min-w-0">
 
-                                        {getIcon(tech.icon)}
+                                            {getIcon(tech.icon)}
 
-                                        <div className="min-w-0">
-                                            <h2 className="text-xs font-semibold truncate">
-                                                {tech.name}
-                                            </h2>
+                                            <div className="min-w-0">
+                                                <h2 className="text-xs font-semibold truncate">
+                                                    {tech.name}
+                                                </h2>
 
-                                            <p className="text-[9px] text-gray-400">
-                                                {tech.category}
-                                            </p>
+                                                <p className="text-[9px] text-gray-400">
+                                                    {tech.category}
+                                                </p>
+                                            </div>
+
                                         </div>
+
+                                        <button
+                                            onClick={() => removeFromStack(tech.id)}
+                                            className="text-gray-400 hover:text-red-500 text-xl leading-none ml-2"
+                                        >
+                                            ×
+                                        </button>
 
                                     </div>
 
-                                    <button
-                                        onClick={() => removeFromStack(tech.id)}
-                                        className="text-gray-400 hover:text-red-500 text-xl leading-none ml-2"
-                                    >
-                                        ×
-                                    </button>
+                                ))}
 
-                                </div>
+                            </div>
 
-                            ))}
-
-                        </div>
+                            <button
+                                onClick={removeAllFromStack}
+                                className="w-full text-pink-600 border border-pink-500 hover:bg-pink-50 text-[10px] py-2 rounded-md mt-3 transition-colors"
+                            >
+                                Remove All
+                            </button>
+                        </>
 
                     )}
 

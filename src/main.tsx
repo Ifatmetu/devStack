@@ -1,10 +1,13 @@
-import { StrictMode } from 'react'
+import { StrictMode, Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import './index.css'
 import Nav from './Components/Nav.tsx'
 import Hero from './Components/hero.tsx'
 import Techonologies from './Components/Techonologies.tsx'
 import Footer from './Components/Footer.tsx'
+import Spinner from './Components/Spinner.tsx'
 import type { ITechnology } from './types/techonology.ts'
 
 
@@ -20,7 +23,17 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Nav />
     <Hero />
-    <Techonologies users={users } />
+    <Suspense fallback={<Spinner />}>
+      <Techonologies users={users } />
+    </Suspense>
     <Footer />
+    <ToastContainer
+      position="top-right"
+      autoClose={2500}
+      hideProgressBar
+      newestOnTop
+      closeOnClick
+      pauseOnHover
+    />
   </StrictMode>,
 )

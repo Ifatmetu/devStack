@@ -3,7 +3,7 @@ import humburger from '../assets/hamburger.png'
 
 const Nav = () => {
     return (
-        <nav className="w-full h-16 bg-white text-black font-mono border-b border-gray-100">
+        <nav className="w-full h-16 bg-white text-black font-mono border-b border-gray-100 sticky top-0 z-50 w-full h-16">
 
             <div className="flex sm:hidden items-center w-full h-full px-3">
 
